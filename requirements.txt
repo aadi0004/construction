@@ -1,0 +1,6 @@
+langgraph
+streamlit
+python-dotenv
+tavily-python
+httpx
+google-generativeai
