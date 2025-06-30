@@ -31,6 +31,13 @@ class State(Dict[str, Any]):
         self.setdefault("project_data", "")
         self.setdefault("optimal_bid", "No bid suggestion")
         self.setdefault("error", None)
+        self.setdefault("building_type", "Residential")
+        self.setdefault("floors", 1)
+        self.setdefault("area_sqft", 1000)
+        self.setdefault("estimated_time", 0.0)
+        self.setdefault("alternative_material", "Bricks")
+        self.setdefault("alternative_cost", 0.0)
+        self.setdefault("inventory_materials", {})
 
 # Simplified workflow execution to bypass LangGraph issues
 def run_workflow(agent_func, state):
@@ -47,16 +54,10 @@ project_scheduling_workflow = lambda state: run_workflow(project_scheduling_agen
 permit_detection_workflow = lambda state: run_workflow(permit_detection_agent, state)
 bid_optimization_workflow = lambda state: run_workflow(bid_optimization_agent, state)
 
-# Cost Estimation workflow (requires material price first)
+# Cost Estimation workflow
 def cost_estimation_workflow(state):
     logger.info(f"Running cost estimation workflow with state: {state}")
     state = State(state) if isinstance(state, dict) else State()
-    material_result = material_price_agent(state)
-    logger.info(f"Material price result for cost estimation: {material_result}")
-    if isinstance(material_result, dict) and "error" not in material_result:
-        state.update(material_result)
-        result = cost_estimation_agent(state)
-        logger.info(f"Cost estimation result: {result}")
-        return result if isinstance(result, dict) else {"error": "Invalid result from cost_estimation_agent"}
-    logger.error(f"Material price error in cost estimation: {material_result.get('error', 'Unknown error')}")
-    return material_result
+    result = cost_estimation_agent(state)
+    logger.info(f"Cost estimation result: {result}")
+    return result if isinstance(result, dict) else {"error": "Invalid result from cost_estimation_agent"}

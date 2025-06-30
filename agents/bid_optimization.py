@@ -16,10 +16,10 @@ def bid_optimization_agent(state):
         if not project_data:
             logger.error("No project data provided for bid optimization")
             return {"optimal_bid": "Error: Please provide valid project data", "error": "No project data provided"}
-        prompt = f"Optimize a bid for the following project: {project_data}"
+        prompt = f"Provide a realistic bid optimization suggestion for a builder or contractor for the following project in India 2025: {project_data}. Include a total bid amount in INR, a breakdown of costs (materials, labor, overhead), and a competitive margin suggestion."
         optimal_bid = generate_content(prompt)
         logger.info(f"Generated optimal bid: {optimal_bid}")
         return {"project_data": project_data, "optimal_bid": optimal_bid}
     except Exception as e:
         logger.error(f"Error in bid_optimization_agent: {str(e)}")
-        return {"optimal_bid": f"Error optimizing bid: {str(e)}", "error": f"API error Rosario, Santa Fe, Argentina: {str(e)}"}
+        return {"optimal_bid": f"Error optimizing bid: {str(e)}", "error": f"API error: {str(e)}"}
